@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Main Website with Chat Modal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS for the main page and the modal */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .open-chat-button {
+            background-color: #5865f2; /* Discord brand purple */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .open-chat-button:hover {
+            background-color: #4752c4; /* Darker purple on hover */
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe; /* Light background for the modal itself (though iframe will cover it) */
+            margin: auto; /* Centered */
+            padding: 0; /* No padding, iframe will fill */
+            border: 1px solid #888;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative; /* For close button positioning */
+            display: flex; /* To stretch iframe */
+            flex-direction: column; /* To stretch iframe */
+
+            /* Adjust these dimensions for your desired modal size */
+            width: 80vw; /* 80% of viewport width */
+            height: 90vh; /* 90% of viewport height */
+            max-width: 1200px; /* Maximum width */
+            max-height: 800px; /* Maximum height */
+        }
+
+        .modal-close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001; /* Ensure it's above the iframe */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background for visibility */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #000;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Iframe inside the modal */
+        #chatModalIframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* Remove iframe's default border */
+            border-radius: 10px; /* Inherit modal content border-radius */
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Main Website!</h1>
+    <p>This is some content on your main page.</p>
+    <p>Click the button below to open the Discord-like chat in a full-screen modal.</p>
+
+    <button id="openChatModalBtn" class="open-chat-button">Open Chat</button>
+
+    <div id="chatModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button">&times;</span>
+            <iframe id="chatModalIframe" title="Discord-like Chat"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for modal functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const openChatModalBtn = document.getElementById('openChatModalBtn');
+            const chatModalOverlay = document.getElementById('chatModalOverlay');
+            const chatModalIframe = document.getElementById('chatModalIframe');
+            const modalCloseButton = chatModalOverlay.querySelector('.modal-close-button');
+
+            // Your chat application's URL
+            const CHAT_APP_URL = 'https://chatroomx.netlify.app/'; 
+            
+            // Set the iframe source dynamically
+            chatModalIframe.src = CHAT_APP_URL;
+
+            // Function to open the modal
+            function openModal() {
+                chatModalOverlay.style.display = 'flex'; // Use 'flex' for centering
+                document.body.style.overflow = 'hidden'; // Disable main body scrolling
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                chatModalOverlay.style.display = 'none';
+                document.body.style.overflow = ''; // Re-enable main body scrolling
+            }
+
+            // Event Listeners
+            openChatModalBtn.addEventListener('click', openModal);
+            modalCloseButton.addEventListener('click', closeModal);
+
+            // Close modal if user clicks outside of the modal content
+            chatModalOverlay.addEventListener('click', (event) => {
+                if (event.target === chatModalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && chatModalOverlay.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
